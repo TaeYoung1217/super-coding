@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface ReservationJpaRepository extends JpaRepository<Reservation, Integer> {
@@ -21,6 +22,6 @@ public interface ReservationJpaRepository extends JpaRepository<Reservation, Int
     List<FlightPriceAndCharge> findFlightPriceAndCharge(Integer userId);
 
     @Query("SELECT r FROM Reservation r JOIN FETCH r.airlineTicket")
-    List<Reservation> findAllByPassenger_User_UserName(String userName);
+    Set<Reservation> findAllByPassenger_User_UserName(String userName);
 
 }

@@ -123,8 +123,8 @@ public class AirReservationService {
         return flightEntities.map(FlightMapper.INSTANCE::flightToFlightWithType);
     }
 
-    public List<String> findArrivalLocationByUserName(String username) {
-        List<Reservation> reservations = reservationJpaRepository.findAllByPassenger_User_UserName(username);
-        return reservations.stream().map(reservation -> reservation.getAirlineTicket().getArrivalLocation()).collect(Collectors.toList());
+    public Set<String> findArrivalLocationByUserName(String username) {
+        Set<Reservation> reservations = reservationJpaRepository.findAllByPassenger_User_UserName(username);
+        return reservations.stream().map(reservation -> reservation.getAirlineTicket().getArrivalLocation()).collect(Collectors.toSet());
     }
 }

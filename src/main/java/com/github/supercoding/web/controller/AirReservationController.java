@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/v1/api/air-reservation")
@@ -60,7 +61,7 @@ public class AirReservationController {
 
     @Operation(summary = "유저 이름으로 예약된 목록 중에서 목적지 리스트 검색")
     @GetMapping("/username-arrival-location")
-    public List<String> findArrivalLocationByUserName(@RequestParam("username") String username){
+    public Set<String> findArrivalLocationByUserName(@RequestParam("username") String username){
         return airReservationService.findArrivalLocationByUserName(username);
     }
 
