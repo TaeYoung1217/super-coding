@@ -58,4 +58,10 @@ public class AirReservationController {
         return airReservationService.findFlightWithType(types,pageable);
     }
 
+    @Operation(summary = "유저 이름으로 예약된 목록 중에서 목적지 리스트 검색")
+    @GetMapping("/username-arrival-location")
+    public List<String> findArrivalLocationByUserName(@RequestParam("username") String username){
+        return airReservationService.findArrivalLocationByUserName(username);
+    }
+
 }

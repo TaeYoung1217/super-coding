@@ -20,5 +20,7 @@ public interface ReservationJpaRepository extends JpaRepository<Reservation, Int
             "WHERE p.user.userId = :userId ")
     List<FlightPriceAndCharge> findFlightPriceAndCharge(Integer userId);
 
+    @Query("SELECT r FROM Reservation r JOIN FETCH r.airlineTicket")
+    List<Reservation> findAllByPassenger_User_UserName(String userName);
 
 }

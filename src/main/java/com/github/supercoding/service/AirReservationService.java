@@ -120,6 +120,11 @@ public class AirReservationService {
 
     public Page<FlightWithType> findFlightWithType(String types, Pageable pageable) {
         Page<Flight> flightEntities = flightJpaRepository.findAllByAirlineTicket_TicketType(types,pageable);
-        return flightEntities.map(FlightWithType::new);
+        return flightEntities.map(FlightMapper.INSTANCE::flightToFlightWithType);
+    }
+
+    public List<String> findArrivalLocationByUserName(String username) {
+        List<Reservation> reservations = reservationJpaRepository.findAllByPassenger_User_UserName(username);
+        return reservations.stream().map(reservation -> reservation.getAirlineTicket().getArrivalLocation()).collect(Collectors.toList());
     }
 }
