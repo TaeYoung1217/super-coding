@@ -2,7 +2,9 @@ package com.github.supercoding.service;
 
 import com.github.supercoding.repository.airlineTicket.AirlineTicket;
 import com.github.supercoding.repository.airlineTicket.AirlineTicketJpaRepository;
+import com.github.supercoding.repository.airlineTicket.FlightWithType;
 import com.github.supercoding.repository.flight.Flight;
+import com.github.supercoding.repository.flight.FlightJpaRepository;
 import com.github.supercoding.repository.passenger.PassengerJpaRepository;
 import com.github.supercoding.repository.reservation.FlightPriceAndCharge;
 import com.github.supercoding.repository.reservation.Reservation;
@@ -13,10 +15,13 @@ import com.github.supercoding.repository.passenger.Passenger;
 import com.github.supercoding.service.exceptions.InvalidValueException;
 import com.github.supercoding.service.exceptions.NotAcceptException;
 import com.github.supercoding.service.exceptions.NotFoundException;
+import com.github.supercoding.service.mapper.FlightMapper;
 import com.github.supercoding.service.mapper.ReservationMapper;
 import com.github.supercoding.service.mapper.TicketMapper;
 import com.github.supercoding.web.dto.airline.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +37,7 @@ public class AirReservationService {
 
     private final PassengerJpaRepository passengerJpaRepository;
     private final ReservationJpaRepository reservationJpaRepository;
+    private final FlightJpaRepository flightJpaRepository;
 
     public List<Ticket> findUserFavoritePlaceTickets(Integer userId, String ticketType) {
         // 1. 유저를 userId 로 가져와서, 선호하는 여행지 도출
@@ -110,5 +116,10 @@ public class AirReservationService {
 
     public List<ReservationView> findAllReservations() {
         return reservationJpaRepository.findAll().stream().map(ReservationMapper.INSTANCE::ReservationToReservationView).collect(Collectors.toList());
+    }
+
+    public Page<FlightWithType> findFlightWithType(String types, Pageable pageable) {
+        Page<Flight> flightEntities = flightJpaRepository.findAllByAirlineTicket_TicketType(types,pageable);
+        return flightEntities.map(FlightWithType::new);
     }
 }

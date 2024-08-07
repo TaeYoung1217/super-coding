@@ -1,12 +1,15 @@
 package com.github.supercoding.web.controller;
 
-import com.github.supercoding.repository.reservation.Reservation;
+import com.github.supercoding.repository.airlineTicket.FlightWithType;
+import com.github.supercoding.repository.flight.Flight;
 import com.github.supercoding.service.AirReservationService;
 import com.github.supercoding.web.dto.airline.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,4 +51,11 @@ public class AirReservationController {
         return airReservationService.findAllReservations();
 
     }
+
+    @Operation(summary = "항공편 타입에 따라 pagination")
+    @GetMapping("/flight-pageable")
+    public Page<FlightWithType> findFlightWithType(@RequestParam("type")String types, Pageable pageable){
+        return airReservationService.findFlightWithType(types,pageable);
+    }
+
 }

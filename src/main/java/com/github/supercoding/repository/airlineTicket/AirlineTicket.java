@@ -42,7 +42,6 @@ public class AirlineTicket {
     @OneToMany(mappedBy = "airlineTicket")
     private List<Flight> flightList;
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
