@@ -18,7 +18,7 @@ public class LoggingFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String method = request.getMethod();
         String uri = request.getRequestURI();
-        log.info(method + " " + uri+" 요청이 들어왔습니다.");
+        log.info(method + uri+" 요청이 들어왔습니다.");
 
         filterChain.doFilter(request, response);
         log.info(method+uri+"가 "+response.getStatus()+" 상태로 response");
