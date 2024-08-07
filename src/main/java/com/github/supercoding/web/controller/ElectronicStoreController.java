@@ -40,9 +40,7 @@ public class ElectronicStoreController {
     )
     @GetMapping("/items")
     public List<Item> findAllItem(){
-        log.info("findAllItem");
-        List<Item> items = electronicStoreItemService.findAllItem();
-        log.info(items.toString());
+        List<Item> items = electronicStoreItemService.findAllItem();log.info(items.toString());
         return electronicStoreItemService.findAllItem();
     }
 
@@ -90,9 +88,7 @@ public class ElectronicStoreController {
     )
     @GetMapping("/items-queries")
     public List<Item> getItemByQueryId(@RequestParam("id") List<String> ids) {
-        log.info("getItemByQueryId");
         List<Item> items = electronicStoreItemService.findItemByQuery(ids);
-        log.info(items.toString());
         return items;
     }
 
@@ -101,9 +97,7 @@ public class ElectronicStoreController {
     )
     @GetMapping("/items-types")
     public List<Item> getItemByType(@RequestParam("type") List<String> types) {
-        log.info("getItemByTypes");
         List<Item> items = electronicStoreItemService.findItemByTypes(types);
-        log.info(items.toString());
         return items;
     }
 
