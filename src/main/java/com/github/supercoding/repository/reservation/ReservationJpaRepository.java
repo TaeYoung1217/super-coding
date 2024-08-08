@@ -24,6 +24,7 @@ public interface ReservationJpaRepository extends JpaRepository<Reservation, Int
     @Query("SELECT r " +
             "FROM Reservation r " +
             "JOIN FETCH r.airlineTicket a " +
+            "JOIN FETCH a.flightList f " +
             "WHERE r.passenger.user.userName = :userName")
     Set<Reservation> findAllByPassenger_User_UserName(String userName);
 

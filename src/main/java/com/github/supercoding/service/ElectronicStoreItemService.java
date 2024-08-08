@@ -13,6 +13,8 @@ import com.github.supercoding.web.dto.items.ItemBody;
 import com.github.supercoding.web.dto.items.StoreInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,7 @@ public class ElectronicStoreItemService {
     private final StoreSalesRepository storeSalesRepository;
     private final StoreSalesJpaRepository storeSalesJpaRepository;
 
+    @Cacheable(value = "items",key = "#root.methodName")
     public List<Item> findAllItem() {
         List<ItemEntity> itemEntities = electronicStoreItemJpaRepository.findAll();
         return itemEntities.stream().map(ItemMapper.INSTANCE::itemEntityToItem).collect(Collectors.toList());
@@ -38,6 +41,7 @@ public class ElectronicStoreItemService {
         //해결 : Item 클래스에 lombok이용 setter 추가
     }
 
+    @CacheEvict(value = "items",allEntries = true) // 메소드 실행 시 저장된 캐시 삭제하기
     public Integer registerItem(ItemBody itemBody) {
         ItemEntity itemEntity = ItemMapper.INSTANCE.idAndItemBodyToItemEntity(null, itemBody);
         ItemEntity itemEntityCreated;
@@ -49,6 +53,7 @@ public class ElectronicStoreItemService {
         return itemEntityCreated.getId();
     }
 
+    @Cacheable(value = "items", key = "#id")
     public Item findItemById(String id) {
         Integer idInt = Integer.parseInt(id);
         ItemEntity itemEntity = electronicStoreItemJpaRepository
@@ -57,6 +62,7 @@ public class ElectronicStoreItemService {
         return ItemMapper.INSTANCE.itemEntityToItem(itemEntity);
     }
 
+    @Cacheable(value = "items", key = "#ids")
     public List<Item> findItemByQuery(List<String> ids) {
         List<ItemEntity> itemsFound = electronicStoreItemJpaRepository.findAll();
         if(itemsFound.isEmpty()) throw new NotFoundException("아이템을 찾을 수 없습니다");
@@ -67,11 +73,13 @@ public class ElectronicStoreItemService {
                 .collect(Collectors.toList());
     }
 
+    @CacheEvict(value = "items",allEntries = true) // 메소드 실행 시 저장된 캐시 삭제하기
     public void deleteItemById(String id) {
         Integer idInt = Integer.parseInt(id);
         electronicStoreItemJpaRepository.deleteById(idInt);
     }
 
+    @CacheEvict(value = "items",allEntries = true) // 메소드 실행 시 저장된 캐시 삭제하기
     @Transactional(transactionManager = "tmJpa1")
     public Item updateItem(String id, ItemBody itemBody) {
         Integer idInt = Integer.parseInt(id);
@@ -82,6 +90,7 @@ public class ElectronicStoreItemService {
         return ItemMapper.INSTANCE.itemEntityToItem(itemEntityUpdated);
     }
 
+    @CacheEvict(value = "items",allEntries = true) // 메소드 실행 시 저장된 캐시 삭제하기
     @Transactional(transactionManager = "tmJpa1") //트랜잭션의 원자성 확보
     public Integer buyItems(BuyOrder buyOrder) {
         Integer itemId = buyOrder.getItemId();

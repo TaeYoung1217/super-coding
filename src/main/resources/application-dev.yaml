@@ -1,5 +1,17 @@
 server:
-  port: 8095
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/chapter_96
+    username: root
+    password: 12341234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
 
 logging:
   config: classpath:logback-spring-dev.xml
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
