@@ -18,7 +18,8 @@ import java.util.Map;
 @Configuration
 @EnableJpaRepositories(
         basePackages = {"com.github.supercoding.repository.airlineTicket", "com.github.supercoding.repository.users",
-                "com.github.supercoding.repository.passenger", "com.github.supercoding.repository.reservation", "com.github.supercoding.repository.flight"},
+                "com.github.supercoding.repository.passenger", "com.github.supercoding.repository.reservation", "com.github.supercoding.repository.flight",
+                "com.github.supercoding.repository.userPrincipal","com.github.supercoding.repository.roles"},
         entityManagerFactoryRef = "entityManagerFactory2",
         transactionManagerRef =  "tmJpa2"
 )
@@ -29,7 +30,8 @@ public class JpaConfig2 {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
         em.setPackagesToScan("com.github.supercoding.repository.airlineTicket", "com.github.supercoding.repository.users",
-                "com.github.supercoding.repository.passenger", "com.github.supercoding.repository.reservation", "com.github.supercoding.repository.flight");
+                "com.github.supercoding.repository.passenger", "com.github.supercoding.repository.reservation", "com.github.supercoding.repository.flight",
+                "com.github.supercoding.repository.userPrincipal","com.github.supercoding.repository.roles");
 
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
