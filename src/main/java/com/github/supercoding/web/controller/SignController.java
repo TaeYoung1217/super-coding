@@ -23,10 +23,10 @@ public class SignController {
         return isSuccess ? "회원가입에 성공" : "회원가입에 실패";
     }
 
-    @PostMapping("/login")
-    public String login(@RequestBody Login loginRequest, HttpServletResponse response) {
+    @PostMapping(value = "/login")
+    public String login(@RequestBody Login loginRequest, HttpServletResponse httpServletResponse){
         String token = authService.login(loginRequest);
-        response.setHeader("X-AUTH-TOKEN",token);
-        return "로그인 성공";
+        httpServletResponse.setHeader("X-AUTH-TOKEN", token);
+        return "로그인이 성공하였습니다.";
     }
 }

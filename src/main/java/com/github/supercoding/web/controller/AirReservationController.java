@@ -2,6 +2,7 @@ package com.github.supercoding.web.controller;
 
 import com.github.supercoding.repository.airlineTicket.FlightWithType;
 import com.github.supercoding.repository.flight.Flight;
+import com.github.supercoding.repository.userDetail.CustomUserDetails;
 import com.github.supercoding.service.AirReservationService;
 import com.github.supercoding.web.dto.airline.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,9 +29,11 @@ public class AirReservationController {
     @Operation(summary = "선호하는 ticket 탐색")
     @GetMapping("/tickets")
     public TicketResponse findAirlineTickets(
-            @Parameter(name = "user-Id", description = "유저 ID", example = "1") @RequestParam("user-Id") Integer userId,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+//            @Parameter(name = "user-Id", description = "유저 ID", example = "1") @RequestParam("user-Id") Integer userId,
             @Parameter(name = "airline-ticket-type", description = "항공권 타입", example = "왕복|편도") @RequestParam("airline-ticket-type") String ticketType )
     {
+        Integer userId = customUserDetails.getUserId();
         List<Ticket> tickets = airReservationService.findUserFavoritePlaceTickets(userId, ticketType);
         return new TicketResponse(tickets);
     }

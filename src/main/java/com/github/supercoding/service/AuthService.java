@@ -51,6 +51,8 @@ public class AuthService {
         UserEntity userFound = userRepository.findByUserName(userName)
                 .orElseGet(()->userRepository.save(UserEntity.builder()
                         .userName(userName)
+                        .likeTravelPlace("파리")
+                        .phoneNum("+82-000-0000")
                         .build()));
 
         //username, password 등록, 기본 ROLE_USER

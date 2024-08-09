@@ -20,7 +20,7 @@ import java.util.List;
 public class JwtTokenProvider {
     private final String secretKey = Base64.getEncoder()
                                             .encodeToString("super-coding".getBytes());
-    private long tokenValidMilliSeconds = 1000L * 60 * 60;
+    private long tokenValidTime = 1000L * 60 * 60;
 
     private final UserDetailsService userDetailsService;
 
@@ -47,7 +47,10 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() - tokenValidMilliSeconds))
+                .setExpiration(new Date(now.getTime() + tokenValidTime))
+                //24.08.09 만료기간이 잘못 설정되어 있었음. -> 현재시간-유지시간을 해버리니까 토큰 발급할때부터 만료였음
+                // now.getTime() - tokenValidTime 이렇게 되어있으니까 토큰 만료시간이 과거 시점이 되어버려서 403 forbidden 에러가 발생.
+                // now.getTime() + tokenValidTime 이렇게 바꿔서 토큰 만료시점을 현재시간 + 토큰 유지 시간으로 수정하여 문제 해결.
                 .signWith(SignatureAlgorithm.HS256,secretKey)
                 .compact();
     }

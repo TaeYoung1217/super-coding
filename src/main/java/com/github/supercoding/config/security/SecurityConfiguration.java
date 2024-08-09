@@ -1,5 +1,6 @@
 package com.github.supercoding.config.security;
 
+import com.github.supercoding.web.filters.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,11 +13,13 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration {
+    private final JwtTokenProvider jwtTokenProvider;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         //기존코드 6.1 버전 이후 지원 안함
@@ -33,15 +36,30 @@ public class SecurityConfiguration {
                 .headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
                 )
+
                 .formLogin(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .rememberMe(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                );
+                )
+                .authorizeHttpRequests(authorize->authorize
+                        .requestMatchers("/resources/static/**","/v1/api/sign/**","/api/**").permitAll() //인가 설정 , 누구에게나
+                        .requestMatchers("/v1/api/air-reservation/**").hasRole("USER") //인가 설정, USER에게만)
+                )
+                .exceptionHandling(exceptionHandler -> exceptionHandler
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                        .accessDeniedHandler(new CustomerAccessDeniedHandler())
+                )
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                //필터 순서를 설정하는데 UsernamePasswordAuthenticationFilter보다 앞에(before) JwtAuthenticationFilter를 적용하도록 설정
+
+        //24.08.09 인가 이상 있어서 403 Forbidden 해결 안됨... -> jwtTokenProvider에서 X-AUTH-TOKEN을 가져오면 null이 되는 문제 발견
+        //--> createToken에서 수정하여 문제 해결.
         return http.build();
     }
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
