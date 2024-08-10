@@ -6,3 +6,10 @@ logging:
     org:
       hibernate:
         SQL: DEBUG
+
+spring:
+  datasource1:
+    url: jdbc:mysql://localhost:3306/chapter_96
+    username: root
+    password: 12341234
+    driver-class-name: com.mysql.cj.jdbc.Driver

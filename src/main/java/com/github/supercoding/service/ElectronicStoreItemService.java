@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ElectronicStoreItemService {
     private final ElectronicStoreItemJpaRepository electronicStoreItemJpaRepository;
-    private final StoreSalesRepository storeSalesRepository;
+    //private final StoreSalesRepository storeSalesRepository;
     private final StoreSalesJpaRepository storeSalesJpaRepository;
 
     @Cacheable(value = "items",key = "#root.methodName")

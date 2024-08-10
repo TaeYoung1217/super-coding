@@ -1,12 +1,21 @@
 server:
-  port: 8090
+  port: 8080
 
-spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/chapter_95
-    username: root
-    password: 12341234
-    driver-class-name: com.mysql.cj.jdbc.Driver
+datasource1:
+  username: ${DATABASE_USERNAME}
+  password: ${DATABASE_PASSWORD}
+  url: jdbc:mysql://localhost:3306/chapter_96
+  driver-class-name: com.mysql.cj.jdbc.Driver
+
+datasource2:
+  username: ${DATABASE_USERNAME}
+  password: ${DATABASE_PASSWORD}
+  url: jdbc:mysql://localhost:3306/chapter_97
+  driver-class-name: com.mysql.cj.jdbc.Driver
+
+jwt:
+  secret-key-source: ${JWT_SECRET_KEY}
+
 
 springdoc:
   version: '@project.version@'
